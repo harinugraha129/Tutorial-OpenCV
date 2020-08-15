@@ -1,20 +1,27 @@
 import numpy as np
 import cv2 as cv
-# cap = cv.VideoCapture(0)
-cap = cv.VideoCapture('rtsp://192.168.10.20:8080/video/h264')
+
+cap = cv.VideoCapture(0)
+# cap = cv.VideoCapture('data/vtest.avi')
+# cap = cv.VideoCapture('rtsp://192.168.10.20:8080/video/h264')
+
 # Define the codec and create VideoWriter object
 fourcc = cv.VideoWriter_fourcc(*'XVID')
 out = cv.VideoWriter('output.avi', fourcc, 20.0, (640,  480))
-while cap.isOpened():
+
+while cap.isOpened():    
     ret, frame = cap.read()
     if not ret:
         print("Can't receive frame (stream end?). Exiting ...")
         break
+    
+    # gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+    # hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
     # frame = cv.flip(frame, 0)
     # write the flipped frame
-    out.write(frame)
+    # out.write(frame)
     cv.imshow('frame', frame)
-    if cv.waitKey(1) == ord('q'):
+    if cv.waitKey(30) == ord('q'):
         break
 # Release everything if job is finished
 cap.release()
