@@ -5,10 +5,7 @@ import cv2 as cv
 cap = cv.VideoCapture('data/vtest.avi')
 # cap = cv.VideoCapture('rtsp://192.168.10.20:8080/video/h264')
 
-# Define the codec and create VideoWriter object
-fourcc = cv.VideoWriter_fourcc(*'XVID')
-fourcc = cv.VideoWriter_fourcc(*'MJPG')
-out = cv.VideoWriter('output.avi', fourcc, 20.0, (640,  480))
+writer = None
 
 while cap.isOpened():    
     ret, frame = cap.read()
@@ -33,12 +30,19 @@ while cap.isOpened():
     pts = pts.reshape((-1,1,2))
     frame = cv.polylines(frame,[pts],True,(0,255,255))
     
-    out.write(frame)
+    if writer is None:
+          # initialize our video writer
+        fourcc = cv.VideoWriter_fourcc(*"MJPG")
+        writer = cv.VideoWriter('output.avi', fourcc, 30,
+              (frame.shape[1], frame.shape[0]), True)
+
+    # write the output frame to disk
+    writer.write(frame)
     cv.imshow('frame', frame)
     if cv.waitKey(30) == ord('q'):
         break
 # Release everything if job is finished
 cap.release()
-out.release()
+writer.release()
 cv.destroyAllWindows()
 
